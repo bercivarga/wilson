@@ -1,0 +1,33 @@
+---
+const {moviePage} = Astro.params;
+const endpoint = `${import.meta.env.STAGE ?? "https://localhost:3000"}/movie/api/${moviePage?.toLocaleString()}`;
+const data = await fetch(endpoint);
+const quotes = await data.json();
+
+const nextMovieData = await fetch('https://owen-wilson-wow-api.herokuapp.com/wows/random').then(res => res.json());
+const nextMovie = nextMovieData[0].movie;
+---
+
+<html lang="en">
+  <body>
+    <main>
+      <a href="/">Back home</a>{" "}
+      <a href={`/movie/${nextMovie}`}>Next movie</a>
+      <h1>{quotes[0].movie}</h1>
+      <p>
+        {quotes[0].year}
+      </p>
+
+      <img src={quotes[0].poster} alt={quotes[0].movie + " poster"} width="200" />
+
+      <audio controls>
+        <source src={quotes[0].audio} type="audio/mpeg">
+      </audio>
+      <code>
+        <pre>
+          {JSON.stringify(quotes, null, 4)}
+        </pre>
+      </code>
+    </main>
+  </body>
+</html>
